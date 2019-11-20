@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>Flatten terrain demo</title>
+</head>
+<body>
+    <div>
+        Flatten terrain demo <a href="https://github.com/w3reality/three-geo/tree/master/examples/flat/index.html">Source Code</a>
+    </div>
+    <canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
+
+    <script src="../deps/three.min.js"></script>
+    <script src="../deps/OrbitControls.js"></script>
+    <!-- <script src="../deps/stats.min.js"></script> -->
+    <script src="../deps/threelet.min.js"></script>
+
+    <script src="../../dist/three-geo.min.js"></script>
+    <!-- <script src="../../lib/three-geo.js"></script> -->
+
+    <script>
+    const threelet = new Threelet({
+        canvas: document.getElementById("canvas"),
+        // optAxes: false,
+    });
+    threelet.setup('mod-controls', THREE.OrbitControls);
+    // threelet.setup('mod-stats', window.Stats);
+
+    const { scene, render } = threelet;
+    render(); // first time
+
+    const ioToken = 'pk.eyJ1IjoiamRldmVsIiwiYSI6ImNqemFwaGJoZjAyc3MzbXA1OGNuODBxa2EifQ.7M__SgfWZGJuEiSqbBXdoQ';
+    const tgeo = new ThreeGeo({
+        // tokenMapbox: 'sk.eyJ1IjoibXJjaGFpIiwiYSI6ImNrMmZxbWhmZTBsOHozb3A2YWdkZnM3OG0ifQ.SLWFDOVRJG8lAxvzTVUbkg', // <---- set your Mapbox API token here
+        tokenMapbox: ioToken,
+    });
+
+    if (tgeo.tokenMapbox === ioToken && window.location.origin !== 'https://w3reality.github.io') {
+        const warning = 'Please set your own Mapbox API token in the ThreeGeo constructor.';
+        alert(warning);
+        throw warning;
+    }
+
+    const origin = [46.5763, 7.9904];
+    const radius = 5.0;
+    tgeo.getTerrain(origin, radius, 12, {
+        onRgbDem: (meshes) => {},
+        onSatelliteMat: (mesh) => {
+            const position = mesh.geometry.attributes.position;
+            const arr = position.array;
+            for (let i = 0; i < arr.length; i += 3) {
+                arr[i+2] = 0; // set z value (height) to zero
+            }
+            position.needsUpdate = true;
+
+            mesh.rotation.x = - Math.PI/2;
+            mesh.material.side = THREE.DoubleSide;
+            scene.add(mesh);
+            render();
+        },
+    });
+    </script>
+</body>
+</html>

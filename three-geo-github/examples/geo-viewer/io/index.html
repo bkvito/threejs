@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="./leaflet.css" />
+    <!-- <style type="text/css">
+        .leaflet-container {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+    </style> -->
+
+    <!-- copied node_modules/leaflet-geosearch/assets/css/leaflet.css -->
+    <link rel="stylesheet" href="./assets/css/leaflet.css" />
+</head>
+<style>
+    body {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+    }
+
+    .terrainBox {
+        color: #eee;
+        font: 11px 'Lucida Grande', sans-serif;
+        text-shadow: 0 -1px 0 #111;
+        position: absolute;
+        z-index: 50;
+        top: 10px;
+        left: 0px;
+        color: white;
+        background: #1a1a1a;
+        width: 300px;
+        margin: 10px;
+    }
+
+    .terrainBox>div {
+        border-bottom-color: rgb(44, 44, 44);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        height: 27px;
+    }
+
+    .mapBox {
+        color: #eee;
+        font: 11px 'Lucida Grande', sans-serif;
+        text-shadow: 0 -1px 0 #111;
+        position: absolute;
+        z-index: 50;
+        bottom: 10px;
+        left: 0px;
+        color: white;
+        background: #1a1a1a;
+        margin: 10px;
+        width: 300px;
+        height: 200px;
+    }
+
+    .mapBox>div {
+        height: 27px;
+        border-bottom-color: rgb(44, 44, 44);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+    }
+
+    #mapWrapper {
+        position: absolute;
+        z-index: 100;
+        width: 300px;
+        height: 300px;
+        right: 0;
+        bottom: 0;
+        margin: 10px;
+
+    }
+
+    .a {
+        width: 300px;
+        margin-top: 10px;
+    }
+</style>
+
+<body>
+
+    <canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
+    <div id="mapWrapper">
+        <div id="map" style="height: 100%;"></div>
+    </div>
+    <div class="mapBox">
+
+        <div>---- 鹰眼窗口 ----</div>
+        <div>鼠标左键: 创建新的地形图</div>
+        <div>---- 场景相机 ----</div>
+        <div id="msg"></div>
+        <div>---- 长度测量 [km] ----</div>
+        <div id="msgMeasure"></div>
+
+    </div>
+    <div class="terrainBox">
+
+        <div>---- 地形图 ----</div>
+        <div id="msgTerrain"></div>
+        <div>鼠标左键:选点用于测量距离</div>
+        <div>鼠标右键:确定旋转轴位置</div>
+
+    </div>
+    <div style="    position: absolute;    top: 50%;">
+        <button id="clearLine">删除线</button>
+    </div>
+
+    <script src="../../deps/jquery.min.js"></script>
+
+    <script src="../../deps/three.min.js"></script>
+    <script src="../../deps/stats.min.js"></script>
+    <script src="../../deps/OrbitControls.js"></script>
+    <script src="../../deps/threelet.min.js"></script>
+    <!-- <script src="../../deps/TGALoader.js"></script>
+    <script src="../node_modules/dat-gui-defaults/dist/dat-gui-defaults.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
+    <script src="../dist/bundle.js"></script>
+    <script>
+
+        $("#clearLine").click(function () {
+            //drawScene  
+            var scene = viewer.sceneMeasure
+            if (scene.children.length == 2) {
+                scene.remove(scene.children[1])
+                viewer._updateLaserMarkTmp(null)
+                viewer._render()
+            } else {
+                console.warn("场景中没有线要素")
+            }
+
+        })
+        function addLayer() {
+            //app.addJson(['../data/china.json', '../data/china.json', '../data/china.json', '../data/china.json']);
+            //debugger;
+            var rangeBox = viewer.demTileBorder//[viewer.demBoxLeftTop,[viewer.demBoxRightBottom[0],viewer.demBoxLeftTop[1]],viewer.demBoxRightBottom,[viewer.demBoxLeftTop[0],viewer.demBoxRightBottom[1]]]
+            app.addJson([
+                '../data/china.json', rangeBox,
+                { 'name': 'name1', 'extrude': 0.2, 'texture': '../data/textures/rock1.jpg' },
+                { 'name': 'name2', 'extrude': 0.1, 'texture': '../data/textures/rock2.jpg' },
+                { 'name': 'name3', 'extrude': 0.3, 'texture': '../data/textures/water.jpg' },
+                { 'name': 'name4', 'extrude': 0.15, 'texture': '../data/textures/rock3.jpg' }
+            ])
+            viewer._render()
+        }
+        //addLayer()
+    </script>
+</body>
+
+</html>

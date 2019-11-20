@@ -1,0 +1,75 @@
+{
+  "name": "three-geo",
+  "version": "1.2.5",
+  "description": "Geographic visualization with three.js",
+  "main": "dist/three-geo.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "dist": "npm run build && npm run build:esm && rm -rf ./dist && cp -r ./lib ./dist",
+    "build": "webpack --mode development --env dev && webpack --mode production --env build && npm run test",
+    "build:esm": "webpack --mode production --env esm && npm run test",
+    "dev": "webpack --mode development --progress --colors --watch --env dev",
+    "test": "mocha --require babel-core/register --colors ./test/*.spec.js",
+    "test:watch": "mocha --require babel-core/register --colors -w ./test/*.spec.js",
+    "mytest": "webpack ./src/index.js --output ./lib/three-geo-test.js --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w3reality/three-geo.git"
+  },
+  "keywords": [
+    "three",
+    "geo",
+    "dataviz"
+  ],
+  "author": "j-devel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/w3reality/three-geo/issues"
+  },
+  "homepage": "https://github.com/w3reality/three-geo",
+  "dependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3"
+  },
+  "devDependencies": {
+    "@mapbox/sphericalmercator": "^1.1.0",
+    "@mapbox/tile-cover": "^3.0.2",
+    "@mapbox/tilebelt": "^1.0.1",
+    "@mapbox/vector-tile": "^1.3.1",
+    "@turf/area": "^6.0.1",
+    "@turf/destination": "^6.0.1",
+    "@turf/helpers": "^6.1.4",
+    "@turf/intersect": "^6.1.2",
+    "@turf/transform-rotate": "^5.1.5",
+    "@turf/transform-translate": "^5.1.5",
+    "@turf/union": "^5.1.5",
+    "babel-core": "^5.8.38",
+    "babel-eslint": "^8.0.3",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-env": "^1.6.1",
+    "chai": "^4.1.2",
+    "d3": "^5.4.0",
+    "eslint": "^6.2.2",
+    "eslint-loader": "^2.1.0",
+    "get-pixels": "^3.3.0",
+    "jsts": "^2.0.2",
+    "lodash": "^4.17.14",
+    "mocha": "^6.1.4",
+    "pbf": "^3.1.0",
+    "regenerator": "^0.14.1",
+    "three": "^0.109.0",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "uniq": "^1.0.1",
+    "webpack": "^4.16.5",
+    "webpack-bundle-analyzer": "^3.3.2",
+    "webpack-cli": "^3.1.0",
+    "webpack-var2esm-plugin": "^1.2.1",
+    "xhr": "^2.5.0",
+    "yargs": "^13.2.4"
+  }
+}

@@ -6,6 +6,7 @@ const THREE = window.THREE;
 import * as turf from '@turf/centroid';
 
 
+
 // 初始化一个场景
 export default class ThreeMap {
   constructor(set) {
@@ -131,14 +132,7 @@ export default class ThreeMap {
     this.mapData.features = this.mapData.features.splice(31, 1)//移除多余geojosn
     //this.mapData.features[0].vector3=[[[-0.5422318350292201, 0.8743065808350237],[0.5996181675534342, 0.8743065808350237],[0.5996181675534342, -0.8407290386369067],[-0.5422318350292201,-0.8407290386369067]]]//[1,1,-1],[-1,1,-1],[-1,-1,-1],[1,-1,-1]
     this.mapData.features[0].vector3 = [this.mapData.rangeBox]
-    //
-    // 
-    // var aa =this.mapData.features[0].vector3
-    // for(let i=0;i<4;i++){
-    //   aa[0][i][0] -=98.8534208041104;
-    //   aa[0][i][1] +=126.35311963874705;
-
-    // }
+  
     console.log(turf)
 
     // 绘制地图模型
@@ -157,11 +151,13 @@ export default class ThreeMap {
             mesh.name= this.mapData.dataName;
             //group.add(mesh);
             g.add(mesh);
+            window.viewer.objsInteractive.push(mesh)
           });
         } else {
           // 单个面
           const mesh = this.drawModel(points);
           mesh.name= this.mapData.dataName;
+          window.viewer.objsInteractive.push(mesh)
           
           //const lineMesh = this.drawLine(points);
           //lineGroup.add(lineMesh);
@@ -185,7 +181,7 @@ export default class ThreeMap {
     group.name = "Layer" + window.viewer.layerAmount
     //根据已加载图层个数确定当前图层加载位置，按照从上到下的顺序加载图层
     group.position.z = this.mapData.layerId == 1 ? 0 : window.viewer.layerPosition//window.viewer.layerAmount ==0 ? -0.1: -window.viewer.layerAmount*0.1-0.1
-
+    window.viewer.label_Zposition.push(window.viewer.layerPosition)
     window.viewer.layerPosition -= this.mapData.dataExtrude
     window.viewer.scene.add(group);
     window.viewer.layerAmount += 1
@@ -226,7 +222,7 @@ export default class ThreeMap {
         shape.lineTo(x, y, x, y);
       }
     });
-    debugger
+    // debugger
     //shape = viewer.mapShape
 
     const geometry = new THREE.ExtrudeGeometry(shape, {

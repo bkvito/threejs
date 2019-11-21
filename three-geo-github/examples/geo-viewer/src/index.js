@@ -84,6 +84,7 @@ class App extends Threelet {
         this.on('mouse-move', (mx, my) => viewer.pick(mx, my));
         this.on('mouse-click-left', (mx, my) => viewer.updateMeasure(mx, my));
         this.on('mouse-click-right', (mx, my) => viewer.updateOrbit(mx, my));//
+        this.on('mouse-click-middle', (mx, my) => viewer.getIntersectMesh(mx, my));//
 
         this._appData = { stats, viewer, guiData };
     }

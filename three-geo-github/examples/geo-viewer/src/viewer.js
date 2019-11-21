@@ -15,6 +15,7 @@ class Viewer {
         this.layerAmount = 0//记录viewer中加载的图层的数量
         this.layerPosition = 0//记录图层z轴位置
         this.demTileBorder = undefined;//存储每个瓦片的外边界点，用于生成边界面
+        this.label_Zposition = [0]// 记录每个地质层的z轴值
 
         const { camera, renderer } = threelet;
         this.threelet = threelet;
@@ -359,8 +360,6 @@ class Viewer {
             },
             //生成外边界线
             onDemTileBorder: (dataEleCovered) => {
-
-
                 var bigBorder = []
                 switch (dataEleCovered.length) {
                     case 4:
@@ -491,6 +490,35 @@ class Viewer {
                 mydata.array.splice(1, 0, mydata.rangeBox)
                 //var mydata = array.outputData(this.demTileBorder)
                 mydata = mydata.array
+                var font = undefined
+                var loader = new THREE.FontLoader();
+                font = loader.load('../assets/fonts/optimer_bold.typeface.json', function (response) {
+                    font = response;
+                    let textGeo = new THREE.TextGeometry("text", {
+                        font: font,
+                        size: 200,
+                        height: 50,
+                        curveSegments: 4,
+                        bevelThickness: 2,
+                        bevelSize: 1.5,
+                        bevelEnabled: true
+                    });
+                    textGeo.computeBoundingBox();
+                    textGeo.computeVertexNormals();
+                    //var centerOffset = - 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+                    textGeo = new THREE.BufferGeometry().fromGeometry(textGeo);
+                    let materials = [
+                        new THREE.MeshPhongMaterial({ color: 0xff5f9f, flatShading: true }), // front
+                        new THREE.MeshPhongMaterial({ color: 0xff5ff9 }) // side
+                    ];
+                    let textMesh = new THREE.Mesh(textGeo, materials);
+                    textMesh.position.x = 0;
+                    textMesh.position.y = 0;
+                    textMesh.position.z = 0;
+                    //textMesh1.rotation.y = Math.PI * 2;
+                    viewer.scene.add(textMesh);
+                    viewer._render()
+                })
                 for (let i = 0; i < mydata.length - 2; i++) {
                     jQuery.get(mydata[0], d => {
                         const mapData = util.decode(d);
@@ -499,21 +527,77 @@ class Viewer {
                         mapData.texture = mydata[i + 2].texture;
                         mapData.rangeBox = mydata[1];
                         mapData.dataName = mydata[i + 2].name;
-                        this.geologyMap.set(mapData.dataName,{"地质层":mydata[i + 2].name,"地址高度":mydata[i + 2].extrude})
+                        this.geologyMap.set(mapData.dataName, { "地质名称": mydata[i + 2].name, "地址高度": mydata[i + 2].extrude })
                         const map = new ThreeMap({ mapData })//new ThreeMapLightBar({ mapData });
-                        map.on('click', (e, g) => {
-                            console.log(g);
-                            map.setAreaColor(g);//????
-                        });
+                        //let textMesh = this.createLabel(mapData.rangeBox, mapData.dataName, i)
+                        // textMesh.position.x = mapData.rangeBox[0][0][0];
+                        // textMesh.position.y = mapData.rangeBox[0][0][1];
+                        // textMesh.position.z = this.label_Zposition;
+                        //textMesh.rotation.x = 0;
+                        // map.on('click', (e, g) => {
+                        //     console.log(g);
+                        //     map.setAreaColor(g);//????
+                        // });
                     })
                 }
-
-
-
-
                 this._render();
             }
         });
+    }
+    loadFont() {
+        let font = null;
+
+    }
+    createLabel(rangeBox, text, i) {
+
+        let textGeo = new THREE.TextGeometry(text, {
+            font: font,
+            size: 10,
+            height: 10,
+            curveSegments: 4,
+            bevelThickness: 2,
+            bevelSize: 1.5,
+            bevelEnabled: true
+        });
+        textGeo.computeBoundingBox();
+        textGeo.computeVertexNormals();
+        //var centerOffset = - 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+        textGeo = new THREE.BufferGeometry().fromGeometry(textGeo);
+        let materials = [
+            new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true }), // front
+            new THREE.MeshPhongMaterial({ color: 0xffffff }) // side
+        ];
+        let textMesh = new THREE.Mesh(textGeo, materials);
+        textMesh.position.x = rangeBox[0][0][0];
+        textMesh.position.y = rangeBox[0][0][1];
+        textMesh.position.z = this.label_Zposition;
+        //textMesh1.rotation.y = Math.PI * 2;
+        this.scene.add(textMesh);
+        return textMesh
+
+        // let textGeo = new THREE.TextGeometry(text, {
+        //     font: 'helvetiker',
+        //     size: 10,
+        //     height: 10,
+        //     curveSegments: 4,
+        //     bevelThickness: 2,
+        //     bevelSize: 1.5,
+        //     bevelEnabled: true
+        // });
+        // textGeo.computeBoundingBox();
+        // textGeo.computeVertexNormals();
+        // //var centerOffset = - 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+        // textGeo = new THREE.BufferGeometry().fromGeometry(textGeo);
+        // let materials = [
+        //     new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true }), // front
+        //     new THREE.MeshPhongMaterial({ color: 0xffffff }) // side
+        // ];
+        // let textMesh = new THREE.Mesh(textGeo, materials);
+
+        // //textMesh1.rotation.y = Math.PI * 2;
+        // this.scene.add(textMesh);
+        // return textMesh
+
     }
     loadVectorDem(cb = this.nop) {
         if (this._isVectorDemLoaded) { return cb(); }
@@ -639,10 +723,12 @@ class Viewer {
         return Viewer._applyWithMeshesVisible(
             this.objsInteractive, (meshes) =>
             this.threelet.raycastFromMouse(mx, my, meshes));
+
     }
 
     updateMeasure(mx, my) {
         let isect = this._doRaycast(mx, my);
+        //console.log(this.geologyMap.get(isect.object.name))
         if (isect !== null) {
             // console.log('isect:', isect);
             let pt = isect.point;
@@ -685,8 +771,14 @@ class Viewer {
 
         this.showMeasureStats(this.markPair);
     }
+    getIntersectMesh(mx, my) {
+        let intersectObj = this._doRaycast(mx, my);
+        let objProperty = this.geologyMap.get(intersectObj.object.name)
+        console.log(objProperty)
+    }
     updateOrbit(mx, my) {
         let isect = this._doRaycast(mx, my);
+
         if (isect !== null) {
             // console.log('isect:', isect);
             let pt = isect.point;
@@ -908,12 +1000,12 @@ class Viewer {
         var newArray = border.slice(127, 381)
         newArray.forEach((x, index) => {
             if (index % 2 == 0) { bigBorder.push(x) }
-        })        
+        })
         bigBorder.push(border[507])
     }
     getBottom(bigBorder, border) {
         bigBorder.push.apply(bigBorder, border.slice(380))
-     }
+    }
 
 
 

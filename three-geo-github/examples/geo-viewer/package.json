@@ -7,7 +7,7 @@
     "scripts": {
         "build": "webpack ./src/index.js --output ./dist/bundle.js --mode development",
         "online": "webpack ./src/index.js --output ./dist/bundle_online.js --mode production",
-        "autoPackage": "webpack-dev-server --open --port 3000 --contentBase src --hot"
+        "dev": "webpack-dev-server --inline --hot --open --port 8089 --host 127.0.0.1"
     },
     "author": "j-devel",
     "license": "MIT",

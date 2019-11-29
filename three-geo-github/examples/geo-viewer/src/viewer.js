@@ -588,7 +588,7 @@ class Viewer {
         textGeo = new THREE.BufferGeometry().fromGeometry(textGeo);
         let materials = [
             new THREE.MeshPhongMaterial({
-                color: 0xee1166,
+                color: 0xffffff,
                 flatShading: true,
                 depthTest: false//关闭深度测试，保证文字任何角度都不会被遮挡
             }), // front

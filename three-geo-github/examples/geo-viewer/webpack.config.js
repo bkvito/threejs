@@ -5,6 +5,8 @@ const env = require('yargs').argv.env;
 const pkg = require('./package.json');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const sourcePath = path.join(__dirname, './src');
 const outputPath = path.join(__dirname, './dist');
@@ -19,6 +21,12 @@ if (env === 'build') {
 } else {
     minimize = false;
     outputFile = "[name].js";
+    // [].push.apply(plugins,[
+    // new HtmlWebpackPlugin({
+    //     title: 'Hot Module Replacement'
+    // }),
+    // new webpack.NamedModulesPlugin(),
+    // new webpack.HotModuleReplacementPlugin()])
 }
 
 module.exports = {
@@ -63,5 +71,6 @@ module.exports = {
         ],
         extensions: ['.json', '.js']
     },
-    plugins: plugins
+    plugins:plugins
+    
 };

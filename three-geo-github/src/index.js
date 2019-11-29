@@ -979,8 +979,7 @@ class ThreeGeo {
             let geom = new THREE.PlaneBufferGeometry(
                 1, 1, cSegments[0], cSegments[1]);
             geom.attributes.position.array = new Float32Array(arr);
-            //debugger;
-            viewer.mapShape = new Float32Array(arr) //dk
+            
             //--------
             // test identifying a 127x1 "belt"
             // let geom = new THREE.PlaneBufferGeometry(1, 1, 127, 1);

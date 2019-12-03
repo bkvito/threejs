@@ -11,6 +11,7 @@
 
     <!-- copied node_modules/leaflet-geosearch/assets/css/leaflet.css -->
     <link rel="stylesheet" href="./assets/css/leaflet.css" />
+    <link rel="stylesheet" href="./assets/css/layui.css" />
 </head>
 <style>
     body {
@@ -79,6 +80,14 @@
         width: 300px;
         margin-top: 10px;
     }
+
+    #slideTest1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100px;
+        height: 20px;
+    }
 </style>
 
 <body>
@@ -110,6 +119,7 @@
     <div style="    position: absolute;    top: 50%;">
         <button id="clearLine">删除线</button>
     </div>
+    <div id="slideTest1"></div>
 
     <script src="../../deps/jquery.min.js"></script>
 
@@ -118,13 +128,15 @@
     import * as THREE from '../../deps/three.module.js';
     </script> -->
     <script src="../../deps/stats.min.js"></script>
+    <script src="../../deps/layui.all.js"></script>
+
     <script src="../../deps/OrbitControls.js"></script>
     <script src="../../deps/threelet.min.js"></script>
     <!-- <script src="../../deps/TGALoader.js"></script>
     <script src="../node_modules/dat-gui-defaults/dist/dat-gui-defaults.min.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
     <script src="../dist/bundle.js"></script>
-    
+
 </body>
 
 </html>
@@ -156,4 +168,39 @@
         viewer._render()
     }
     //addLayer()
+    function addAnimationObj() {
+        let obj = new THREE.BoxGeometry(0.2, 0.2, 0.2)
+        let material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+
+        let cube = new THREE.Mesh(obj, material);
+        cube.position.set(-0.987204052597662, 0.7594052361994124, 1.2)
+        cube.name = "Sportsbox"
+        viewer.scene.add(cube);
+    }
+    addAnimationObj()
+    var stop = null
+    function animate(speed) {
+        stop = requestAnimationFrame(animate);
+        viewer.animationObj("Sportsbox", speed)
+        viewer._render()
+    }
+    //animate();
+    layui.use('slider', function () {
+        var slider = layui.slider;
+
+        //渲染
+        slider.render({
+            elem: '#slideTest1', //绑定元素
+            // range: false,
+            // value: [0, 100],
+            max:10,
+            
+            change: function (value) {
+                console.log(value) //动态获取滑块数值
+                
+                animate(value)
+            }
+        });
+    });
 </script>

@@ -232,8 +232,10 @@ export default class ThreeMap {
       depth: -this.mapData.dataExtrude,
       bevelEnabled: false
     });
+    // const length = Math.abs(this.mapData.rangeBox[0][0][0])+Math.abs(this.mapData.rangeBox[0][1][0])
+    // const geometry = new THREE.BoxGeometry(length,length,this.mapData.dataExtrude)
 
-    
+
 
 
 
@@ -249,64 +251,44 @@ export default class ThreeMap {
     // texture.wrapS = THREE.RepeatWrapping;
     // texture.wrapT = THREE.RepeatWrapping;
     // texture.repeat.set(1, 1);
-    
 
-    const material = new THREE.MeshBasicMaterial({ map: texture,side: THREE.DoubleSide});
+
+    const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.FrontSide });
     // const material = new THREE.MeshBasicMaterial({
     //   color: mycolor,
     //   transparent: false,
     //   opacity: 0.9,
     //   side: THREE.DoubleSide
     // });
-    
-    var t0 = new THREE.Vector2(0, 0);//图片左下角
-    var t1 = new THREE.Vector2(1, 0);//图片右下角
-    var t3 = new THREE.Vector2(1, 1);//图片右上角
-    var t2 = new THREE.Vector2(0, 1);//图片左上角
-    let uv1 = [t0, t1, t2];//选中图片一个三角区域像素——映射到三角面1
-    let uv2 = [t0, t2, t3];//选中图片一个三角区域像素——映射到三角面2
-    geometry.faceVertexUvs[0]=[]
-    //geometry.faceVertexUvs[0][0]= [t0, t1, t2];//纹理坐标传递给纹理三角面属性    
-    geometry.faceVertexUvs[0].push([t0, t2, t3],[t3, t1, t0]);//[t0, t2, t3],
-    //geometry.faceVertexUvs[0][1]= [t0, t3, t1]
-
+    this.caculateGeometryUv(geometry)
     const mesh = new THREE.Mesh(geometry, material);
-
-
-    // /**
-    //      * 纹理贴图网格模型
-    //      */
-    // var geometry2 = new THREE.Geometry(); //创建一个空几何体对象
-    // /**顶点坐标(纹理映射位置)*/
-    // var p1 = new THREE.Vector3().fromArray(this.mapData.rangeBox[0][0]); //顶点1坐标
-    // var p2 = new THREE.Vector3().fromArray(this.mapData.rangeBox[0][1]); //顶点2坐标
-    // var p3 = new THREE.Vector3().fromArray(this.mapData.rangeBox[0][2]); //顶点3坐标
-    // var p4 = new THREE.Vector3().fromArray(this.mapData.rangeBox[0][3]); //顶点4坐标
-    // geometry2.vertices.push(p1, p2, p3, p4); //顶点坐标添加到geometry对象
-    // /** 三角面1、三角面2*/
-    // var normal = new THREE.Vector3(0, 0, 1); //三角面法向量
-    // var face0 = new THREE.Face3(0, 1, 2, normal); //三角面1
-    // var face1 = new THREE.Face3(0, 2, 3, normal); //三角面2
-    // geometry2.faces.push(face0, face1); //三角面1、2添加到几何体
-    // /**纹理坐标*/
-    // var t0 = new THREE.Vector2(0, 0);//图片左下角
-    // var t1 = new THREE.Vector2(1, 0);//图片右下角
-    // var t2 = new THREE.Vector2(1, 1);//图片右上角
-    // var t3 = new THREE.Vector2(0, 1);//图片左上角
-    // let uv1 = [t0, t1, t2];//选中图片一个三角区域像素——映射到三角面1
-    // let uv2 = [t0, t2, t3];//选中图片一个三角区域像素——映射到三角面2
-    // geometry2.faceVertexUvs[0].push(uv1, uv2);//纹理坐标传递给纹理三角面属性
-    // var texture2 = new THREE.TextureLoader().load(this.mapData.texture);//加载图片
-    // var material2 = new THREE.MeshLambertMaterial({
-    //   map: texture2,//纹理属性map赋值
-    //   side: THREE.DoubleSide//两面可见
-    // });//材质对象
-    // var mesh2 = new THREE.Mesh(geometry2, material2);//纹理贴图网格模型对象
-    // mesh2.name="hahha"
-    // window.viewer.scene.add(mesh2);//纹理贴图网格模型添加到场景中
 
     return mesh;
   }
+  caculateGeometryUv(geometry) {
+    geometry.computeBoundingBox();
+    var max = geometry.boundingBox.max,
+      min = geometry.boundingBox.min;
+    var offset = new THREE.Vector2(0 - min.x, 0 - min.y);
+    var range = new THREE.Vector2(max.x - min.x, max.y - min.y);
+    var faces = geometry.faces;
+    geometry.faceVertexUvs[0] = [];
+    for (var i = 0; i < faces.length; i++) {
+      var v1 = geometry.vertices[faces[i].a],
+        v2 = geometry.vertices[faces[i].b],
+        v3 = geometry.vertices[faces[i].c];
+      geometry.faceVertexUvs[0].push([
+        new THREE.Vector2((v1.x + offset.x) / range.x, (v1.y + offset.y) / range.y),
+        new THREE.Vector2((v2.x + offset.x) / range.x, (v2.y + offset.y) / range.y),
+        new THREE.Vector2((v3.x + offset.x) / range.x, (v3.y + offset.y) / range.y)
+      ]);
+    }
+    geometry.uvsNeedUpdate = true;
+  }
+
+
+
+
 
   /**
    * @desc 经纬度转换成墨卡托投影

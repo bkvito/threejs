@@ -12,11 +12,25 @@ import ThreeMap from './ThreeMap.js';
 
 class Viewer {
     constructor(env, threelet) {
+        this.instantaneousPosition= 0;//物体运动的位置
         this.env = env;
         this.layerAmount = 0//记录viewer中加载的图层的数量
         this.layerPosition = 0//记录图层z轴位置
         this.demTileBorder = undefined;//存储每个瓦片的外边界点，用于生成边界面
         this.label_Zposition = [0]// 记录每个地质层的z轴值
+        // this.trackArray = [
+        //     [-0.987204052597662, 0.7594052361994124],
+        //     [0.8308571549522812, 0.7594052361994124],
+        //     [0.8308571549522812, -1.0588196835306471],
+        //     [-0.987204052597662, -1.0588196835306471]
+
+        // ]
+        this.curve = new THREE.CatmullRomCurve3( [
+            new THREE.Vector3(-0.987204052597662, 0.7594052361994124,1.2),
+            new THREE.Vector3(0.8308571549522812, 0.7594052361994124,1.2),
+            new THREE.Vector3(0.8308571549522812, -1.0588196835306471,1.2),
+            new THREE.Vector3(-0.987204052597662, -1.0588196835306471,1.2)
+        ] );
 
 
 
@@ -575,7 +589,7 @@ class Viewer {
 
         let textGeo = new THREE.TextGeometry(text, {
             font: font,
-            size: size-size*0.4,
+            size: size - size * 0.4,
             height: 0.02,
             curveSegments: 4,
             bevelThickness: 2,
@@ -596,8 +610,8 @@ class Viewer {
         ];
         let textMesh = new THREE.Mesh(textGeo, materials);
         textMesh.position.x = rangeBox[0][3][0]//+centerOffset;
-        textMesh.position.y = rangeBox[0][3][1] ;
-        textMesh.position.z = this.layerPosition +size*0.3;
+        textMesh.position.y = rangeBox[0][3][1];
+        textMesh.position.z = this.layerPosition + size * 0.3;
         textMesh.rotation.x = Math.PI / 2;
         textMesh.castShadow = true;
         this.scene.add(textMesh);
@@ -781,7 +795,7 @@ class Viewer {
         let intersectObj = this._doRaycast(mx, my);
         let objProperty = this.geologyMap.get(intersectObj.object.name)
         console.log(objProperty)
-        let a='地质名称:'+ objProperty.name  +  ' 高度:'+objProperty.extrude +'m'
+        let a = '地质名称:' + objProperty.name + ' 高度:' + objProperty.extrude + 'm'
         $('#geologyProperties').text(a)
     }
     updateOrbit(mx, my) {
@@ -965,6 +979,7 @@ class Viewer {
     }
     _render() {
         this.renderer.clear();
+        //this.animate('Sportsbox',0.5)
         this.renderer.render(this.scene, this.camera);
         this.renderer.clearDepth();
         this.renderer.render(this.sceneMeasure, this.camera);
@@ -1014,6 +1029,16 @@ class Viewer {
     getBottom(bigBorder, border) {
         bigBorder.push.apply(bigBorder, border.slice(380))
     }
+    animationObj(meshName, speed) {
+        speed *= 0.01
+        let mesh = this.scene.getObjectByName(meshName)
+        if(speed>0.99) speed=0.9
+
+        
+        var point = this.curve.getPoint(speed)
+        mesh && mesh.position.set(point.x,point.y,point.z);
+    }
+
 
 
 

@@ -30,7 +30,7 @@ class Viewer {
             new THREE.Vector3(0.8308571549522812, 0.7594052361994124,1.2),
             new THREE.Vector3(0.8308571549522812, -1.0588196835306471,1.2),
             new THREE.Vector3(-0.987204052597662, -1.0588196835306471,1.2)
-        ] );
+        ] ,true);
 
 
 
@@ -1030,21 +1030,13 @@ class Viewer {
         bigBorder.push.apply(bigBorder, border.slice(380))
     }
     animationObj(meshName, speed) {
-        speed *= 0.01
+        let aa= speed *0.0005
         let mesh = this.scene.getObjectByName(meshName)
-        if(speed>0.99) speed=0.9
-
-        
-        var point = this.curve.getPoint(speed)
-        mesh && mesh.position.set(point.x,point.y,point.z);
+        if(aa == 0 ) this.instantaneousPosition =0
+        this.instantaneousPosition += aa        
+        var point = this.curve.getPoint(this.instantaneousPosition)
+        mesh && mesh.position.set(point.x,point.y,point.z);        
     }
-
-
-
-
-
-
-
 }
 
 export default Viewer;

@@ -253,7 +253,7 @@ export default class ThreeMap {
     // texture.repeat.set(1, 1);
 
 
-    const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.FrontSide });
+    const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
     // const material = new THREE.MeshBasicMaterial({
     //   color: mycolor,
     //   transparent: false,

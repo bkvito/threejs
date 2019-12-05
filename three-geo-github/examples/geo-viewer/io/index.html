@@ -82,11 +82,13 @@
     }
 
     #slideTest1 {
-        position: absolute;
-        top: 50%;
-        left: 50%;
+        display: none;
+        top: 161px;
+        right: 30px;
         width: 100px;
         height: 20px;
+        position: absolute;
+        z-index: 99;
     }
 </style>
 
@@ -178,14 +180,15 @@
         cube.name = "Sportsbox"
         viewer.scene.add(cube);
     }
-    addAnimationObj()
+    //addAnimationObj()
     var stop = null
-    function animate(speed) {
+    let mySpeed = 1
+    function animate() {
         stop = requestAnimationFrame(animate);
-        viewer.animationObj("Sportsbox", speed)
+        viewer.animationObj("Sportsbox", mySpeed)
         viewer._render()
     }
-    //animate();
+    //animate(mySpeed);
     layui.use('slider', function () {
         var slider = layui.slider;
 
@@ -194,13 +197,25 @@
             elem: '#slideTest1', //绑定元素
             // range: false,
             // value: [0, 100],
-            max:10,
-            
+            max: 10,
+
             change: function (value) {
                 console.log(value) //动态获取滑块数值
-                
-                animate(value)
+                mySpeed = value
+                animate();
             }
         });
     });
+    function addTube() {
+        var tubeGeometry2 = new THREE.TubeGeometry(viewer.curve, 100, 0.001, 50, false);
+        var tubeMaterial2 = new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            transparent: false,
+            opacity: 1,
+        });
+        var tube2 = new THREE.Mesh(tubeGeometry2, tubeMaterial2);
+        viewer.scene.add(tube2)
+    }
+    //addTube()
+
 </script>

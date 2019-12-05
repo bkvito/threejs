@@ -99,6 +99,7 @@ class App extends Threelet {
             //----
             loc: query.title ? query.title.replace('_', ' ') : "",
             leaflet: true,
+            flyObj:false
         };
     }
     static createAnimToggler(render) {
@@ -174,6 +175,7 @@ class App extends Threelet {
                     viewer.reloadPageWithLocation(ll, title);
                 }
             },
+            onChangeObj: () => {}
         });
         guiHelper.setDefaults({
             isDev: () => { },
@@ -188,6 +190,7 @@ class App extends Threelet {
             loc: guiData.loc,
             leaflet: guiData.leaflet,
             sourceCode: () => { },
+            flyObj: guiData.flyObj
         });
         return guiHelper;
     }

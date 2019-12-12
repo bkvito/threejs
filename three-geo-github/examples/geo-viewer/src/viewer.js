@@ -47,13 +47,13 @@ class Viewer {
         this.loader = new THREE.FileLoader();
         this.geologyMap = new Map()
 
-        // var dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        // dirLight.position.set(0, 0, -1).normalize();
-        // this.scene.add(dirLight);
+        var dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        dirLight.position.set(0, 0, -1).normalize();
+        this.scene.add(dirLight);
 
-        // var pointLight = new THREE.PointLight(0xffffff, 1.5);
-        // pointLight.position.set(0, 100, 90);
-        // this.scene.add(pointLight);
+        var pointLight = new THREE.PointLight(0xffffff, 1.5);
+        pointLight.position.set(0, 100, 90);
+        this.scene.add(pointLight);
 
         //添加半球光以显示镜面材质的文字
         this.scene.add(new THREE.HemisphereLight(0x606060, 0x404040));
@@ -86,10 +86,12 @@ class Viewer {
             new THREE.LineBasicMaterial({ color: 0xcccccc }));
         walls.position.set(0, 0, 0);
         walls.name = "singleton-walls";
+        walls.visible=false
         this.scene.add(walls);
 
         const axes = new THREE.AxesHelper(1);
         axes.name = "singleton-axes";
+        axes.visible=false
         this.scene.add(axes);
 
         //======== add laser
@@ -526,52 +528,19 @@ class Viewer {
                 const _this = this;
                 loader.load('../assets/fonts/Microsoft_YaHei_Regular.json', function (response) {
                     let font = response;
-                    // let bevelEnabled = false
-                    // let height = 0.1;
-                    // let size = 0.5
-                    // let textGeo = new THREE.TextGeometry("text", {
-                    //     font: font,
-                    //     size: size,
-                    //     height: height,
-                    //     curveSegments: 4,
-                    //     bevelThickness: 0.5,
-                    //     bevelSize: 0.4,
-                    //     bevelEnabled: bevelEnabled
-                    // });
-                    // textGeo.computeBoundingBox();
-                    // textGeo.computeVertexNormals();
-
-                    // var centerOffset = - 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
-                    // textGeo = new THREE.BufferGeometry().fromGeometry(textGeo);
-                    // const materials = new THREE.MeshPhongMaterial({ color: 0xff1111, flatShading: true })
-                    // let textMesh = new THREE.Mesh(textGeo, materials);
-                    // textMesh.position.x = centerOffset;
-                    // textMesh.position.y = 0;
-                    // textMesh.position.z = 2;
-                    // //textMesh1.rotation.y = Math.PI * 2;
-                    // textMesh.name = '文字'
-                    // viewer.scene.add(textMesh);
-                    // viewer._render()
-
                     for (let i = 0; i < mydata.length - 2; i++) {
                         jQuery.get(mydata[0], d => {
                             const mapData = util.decode(d);
                             mapData.dataExtrude = mydata[i + 2].extrude;
                             mapData.layerId = i + 1;
                             mapData.texture = mydata[i + 2].texture;
+                            mapData.allAroundTexture=mydata[i + 2].allAroundTexture;
                             mapData.rangeBox = mydata[1];
                             mapData.dataName = mydata[i + 2].name;
                             _this.geologyMap.set(mapData.dataName, { "name": mydata[i + 2].name, "extrude": mydata[i + 2].extrude })
                             const map = new ThreeMap({ mapData })//new ThreeMapLightBar({ mapData });
                             _this.createLabel(mapData.rangeBox, mapData.dataName, font, mapData.dataExtrude, i)
-                            // textMesh.position.x = mapData.rangeBox[0][0][0];
-                            // textMesh.position.y = mapData.rangeBox[0][0][1];
-                            // textMesh.position.z = this.label_Zposition;
-                            //textMesh.rotation.x = 0;
-                            // map.on('click', (e, g) => {
-                            //     console.log(g);
-                            //     map.setAreaColor(g);//????
-                            // });
+                           
                             _this.render()
                         })
                     }
@@ -614,7 +583,11 @@ class Viewer {
         textMesh.position.z = this.layerPosition + size * 0.3;
         textMesh.rotation.x = Math.PI / 2;
         textMesh.castShadow = true;
+        textMesh.name="Layer"+ i +"discrible"
         this.scene.add(textMesh);
+        
+        //this.scene.getObjectByName("Layer"+ i) && this.scene.getObjectByName("Layer"+ i).add(textMesh)
+        
 
 
 

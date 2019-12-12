@@ -82,7 +82,7 @@ class App extends Threelet {
         // })
 
         this.on('mouse-move', (mx, my) => viewer.pick(mx, my));
-        this.on('mouse-click-left', (mx, my) => viewer.updateMeasure(mx, my));
+        //this.on('mouse-click-left', (mx, my) => viewer.updateMeasure(mx, my));
         this.on('mouse-click-right', (mx, my) => viewer.updateOrbit(mx, my));//
         this.on('mouse-click-middle', (mx, my) => viewer.getIntersectMesh(mx, my));//
 
@@ -93,7 +93,7 @@ class App extends Threelet {
         const query = Viewer.parseQuery();
         return { // with defaults
             vis: query.mode,
-            grids: true,
+            grids: false,
             autoOrbit: false,
             vrLaser: false,
             //----

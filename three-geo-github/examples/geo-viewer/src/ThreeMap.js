@@ -243,23 +243,17 @@ export default class ThreeMap {
     // mycolor.fromArray(new Float32Array([Math.random(), Math.random(), Math.random()]));
 
     //加载纹理图片
-    // var loader = new THREE.TextureLoader()
-    // var texture = loader.load(this.mapData.texture);
     var texture = new THREE.TextureLoader().load(this.mapData.texture);
-    // texture.wrapS = THREE.ClampToEdgeWrapping;
-    // texture.wrapT = THREE.ClampToEdgeWrapping;
-    // texture.wrapS = THREE.RepeatWrapping;
-    // texture.wrapT = THREE.RepeatWrapping;
-    // texture.repeat.set(1, 1);
-
-
     const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-    // const material = new THREE.MeshBasicMaterial({
-    //   color: mycolor,
-    //   transparent: false,
-    //   opacity: 0.9,
-    //   side: THREE.DoubleSide
-    // });
+    
+    // var loader = new THREE.CubeTextureLoader().setPath('../data/textures/');
+    // var textureCube = loader.load([
+    //   'test.jpg', 'test.jpg',
+    //   'test.jpg', 'test.jpg',
+    //   'test.jpg', 'test.jpg',
+    // ]);
+    // var material = new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: textureCube });
+
     this.caculateGeometryUv(geometry)
     const mesh = new THREE.Mesh(geometry, material);
 

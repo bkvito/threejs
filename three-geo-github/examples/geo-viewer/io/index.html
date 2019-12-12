@@ -120,23 +120,24 @@
     </div>
     <div style="    position: absolute;    top: 50%;">
         <button id="clearLine">删除线</button>
+        <button onclick="chenji()">沉积岩</button>
+        <button onclick="shihui()">石灰岩</button>
+        <button onclick="fushui()">富水层</button>
+        <button onclick="huoshan()">火山岩</button>
+        <button onclick="topToggle()">地形</button>
+
     </div>
     <div id="slideTest1"></div>
 
     <script src="../../deps/jquery.min.js"></script>
 
     <script src="../../deps/three.min.js"></script>
-    <!-- <script type="module">
-    import * as THREE from '../../deps/three.module.js';
-    </script> -->
     <script src="../../deps/stats.min.js"></script>
     <script src="../../deps/layui.all.js"></script>
 
     <script src="../../deps/OrbitControls.js"></script>
     <script src="../../deps/threelet.min.js"></script>
-    <!-- <script src="../../deps/TGALoader.js"></script>
-    <script src="../node_modules/dat-gui-defaults/dist/dat-gui-defaults.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
+
     <script src="../dist/bundle.js"></script>
 
 </body>
@@ -157,8 +158,7 @@
 
     })
     function addLayer() {
-        //app.addJson(['../data/china.json', '../data/china.json', '../data/china.json', '../data/china.json']);
-        //debugger;
+
         var rangeBox = viewer.demTileBorder//[viewer.demBoxLeftTop,[viewer.demBoxRightBottom[0],viewer.demBoxLeftTop[1]],viewer.demBoxRightBottom,[viewer.demBoxLeftTop[0],viewer.demBoxRightBottom[1]]]
         app.addJson([
             '../data/china.json', rangeBox,
@@ -195,8 +195,6 @@
         //渲染
         slider.render({
             elem: '#slideTest1', //绑定元素
-            // range: false,
-            // value: [0, 100],
             max: 10,
 
             change: function (value) {
@@ -217,5 +215,36 @@
         viewer.scene.add(tube2)
     }
     //addTube()
+    function topToggle() {
+        viewer.scene.children.forEach(element => {
+            if (element.name) {
+                let aa = element.name.startsWith("demTileBorder") || element.name.startsWith("dem-rgb")
+                aa && (element.visible = element.visible ? false : true)
+                viewer._render()
+            }
+
+        });
+    }
+    function chenji() {
+        viewer.scene.getObjectByName("Layer0").visible = viewer.scene.getObjectByName("Layer0").visible ? false : true;
+        viewer.scene.getObjectByName("Layer0discrible").visible = viewer.scene.getObjectByName("Layer0").visible
+        viewer._render()
+    }
+    function shihui() {
+        viewer.scene.getObjectByName("Layer1").visible = viewer.scene.getObjectByName("Layer1").visible ? false : true;
+        viewer.scene.getObjectByName("Layer1discrible").visible = viewer.scene.getObjectByName("Layer1").visible
+        viewer._render()
+    }
+    function fushui() {
+        viewer.scene.getObjectByName("Layer2").visible = viewer.scene.getObjectByName("Layer2").visible ? false : true;
+        viewer.scene.getObjectByName("Layer2discrible").visible = viewer.scene.getObjectByName("Layer2").visible
+        viewer._render()
+    }
+    function huoshan() {
+        viewer.scene.getObjectByName("Layer3").visible = viewer.scene.getObjectByName("Layer3").visible ? false : true;
+        viewer.scene.getObjectByName("Layer3discrible").visible = viewer.scene.getObjectByName("Layer3").visible
+        viewer._render()
+    }
+
 
 </script>

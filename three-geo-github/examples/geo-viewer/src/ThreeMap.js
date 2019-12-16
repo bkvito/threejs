@@ -133,6 +133,26 @@ export default class ThreeMap {
     //this.mapData.features[0].vector3=[[[-0.5422318350292201, 0.8743065808350237],[0.5996181675534342, 0.8743065808350237],[0.5996181675534342, -0.8407290386369067],[-0.5422318350292201,-0.8407290386369067]]]//[1,1,-1],[-1,1,-1],[-1,-1,-1],[1,-1,-1]
     this.mapData.features[0].vector3 = [this.mapData.rangeBox]
 
+    // //生成四个角的线
+    // var rangeBoxArray = this.mapData.rangeBox
+    // var rangeLineGroup = new THREE.Group()
+    // rangeLineGroup.name = "demTileBorderLineCollection"
+    // for (let i = 0; i < rangeBoxArray.length; i++) {
+    //   var material = new THREE.LineBasicMaterial({
+    //     color: 0x0000ff
+    //   });
+
+    //   var geometry = new THREE.Geometry();
+    //   geometry.vertices.push(
+    //     new THREE.Vector3(rangeBoxArray[i][0], rangeBoxArray[i][1], rangeBoxArray[i][2]),
+    //     new THREE.Vector3(rangeBoxArray[i][0], rangeBoxArray[i][1], 0)
+    //   );
+    //   var line = new THREE.Line(geometry, material);
+    //   rangeLineGroup.add(line)
+    // }
+    // window.viewer.scene.add(rangeLineGroup);
+
+
 
 
     console.log(turf)
@@ -245,7 +265,7 @@ export default class ThreeMap {
     //加载纹理图片
     var texture = new THREE.TextureLoader().load(this.mapData.texture);
     const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-    
+
     // var loader = new THREE.CubeTextureLoader().setPath('../data/textures/');
     // var textureCube = loader.load([
     //   'test.jpg', 'test.jpg',

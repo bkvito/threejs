@@ -399,17 +399,22 @@ class Viewer {
                         for (let i = 0; i < dataEleCovered.length; i++) {
                             var border = dataEleCovered[i][3].border[0]
                             if (i == 0) {
-                                this.getLeft(bigBorder, border)
-                                this.getTop(bigBorder, border)
+                                // this.getLeft(bigBorder, border)
+                                // this.getTop(bigBorder, border)
+
+                                bigBorder.push(border[0])
                             } else if (i == 1) {
-                                this.getLeft(bigBorder, border)
-                                this.getBottom(bigBorder, border)
+                                // this.getLeft(bigBorder, border)
+                                // this.getBottom(bigBorder, border)
+                                bigBorder.push(border[380])
                             } else if (i == 2) {
-                                this.getRight(bigBorder, border)
-                                this.getTop(bigBorder, border)
+                                // this.getRight(bigBorder, border)
+                                // this.getTop(bigBorder, border)
+                                bigBorder.push(border[127])
                             } else {
-                                this.getRight(bigBorder, border)
-                                this.getBottom(bigBorder, border)
+                                // this.getRight(bigBorder, border)
+                                // this.getBottom(bigBorder, border)
+                                bigBorder.push(border[507])
                             }
                         }
                         break;
@@ -419,22 +424,26 @@ class Viewer {
                             for (let i = 0; i < dataEleCovered.length; i++) {
                                 var border = dataEleCovered[i][3].border[0]
                                 if (i == 0) {
-                                    this.getTop(bigBorder, border)
-                                    this.getLeft(bigBorder, border)
+                                    // this.getTop(bigBorder, border)
+                                    // this.getLeft(bigBorder, border)
+                                    bigBorder.push(border[0])
                                 } else if (i == 1) {
-                                    this.getBottom(bigBorder, border)
-                                    this.getLeft(bigBorder, border)
+                                    // this.getBottom(bigBorder, border)
+                                    // this.getLeft(bigBorder, border)
+                                    bigBorder.push(border[380])
                                 } else if (i == 2) {
                                     this.getTop(bigBorder, border)
 
                                 } else if (i == 3) {
                                     this.getBottom(bigBorder, border)
                                 } else if (i == 4) {
-                                    this.getRight(bigBorder, border)
-                                    this.getTop(bigBorder, border)
+                                    // this.getRight(bigBorder, border)
+                                    // this.getTop(bigBorder, border)
+                                    bigBorder.push(border[127])
                                 } else {
-                                    this.getBottom(bigBorder, border)
-                                    this.getRight(bigBorder, border)
+                                    // this.getBottom(bigBorder, border)
+                                    // this.getRight(bigBorder, border)
+                                    bigBorder.push(border[507])
                                 }
                             }
                         } else {
@@ -442,21 +451,25 @@ class Viewer {
                             for (let i = 0; i < dataEleCovered.length; i++) {
                                 var border = dataEleCovered[i][3].border[0]
                                 if (i == 0) {
-                                    this.getTop(bigBorder, border)
-                                    this.getLeft(bigBorder, border)
+                                    // this.getTop(bigBorder, border)
+                                    // this.getLeft(bigBorder, border)
+                                    bigBorder.push(border[0])
                                 } else if (i == 1) {
-                                    this.getLeft(bigBorder, border)
+                                    // this.getLeft(bigBorder, border)
                                 } else if (i == 2) {
-                                    this.getLeft(bigBorder, border)
-                                    this.getBottom(bigBorder, border)
+                                    // this.getLeft(bigBorder, border)
+                                    // this.getBottom(bigBorder, border)
+                                    bigBorder.push(border[380])
                                 } else if (i == 3) {
-                                    this.getRight(bigBorder, border)
-                                    this.getTop(bigBorder, border)
+                                    // this.getRight(bigBorder, border)
+                                    // this.getTop(bigBorder, border)
+                                    bigBorder.push(border[127])
                                 } else if (i == 4) {
-                                    this.getRight(bigBorder, border)
+                                    // this.getRight(bigBorder, border)
                                 } else {
-                                    this.getRight(bigBorder, border)
-                                    this.getBottom(bigBorder, border)
+                                    // this.getRight(bigBorder, border)
+                                    // this.getBottom(bigBorder, border)
+                                    bigBorder.push(border[507])
                                 }
                             }
                         }
@@ -466,28 +479,33 @@ class Viewer {
                         for (let i = 0; i < dataEleCovered.length; i++) {
                             var border = dataEleCovered[i][3].border[0]
                             if (i == 0) {
-                                this.getTop(bigBorder, border)
-                                this.getLeft(bigBorder, border)
+                                // this.getTop(bigBorder, border)
+                                // this.getLeft(bigBorder, border)
+
+                                bigBorder.push(border[0])
 
                             } else if (i == 1) {
-                                this.getLeft(bigBorder, border)
+                                // this.getLeft(bigBorder, border)
                             } else if (i == 2) {
-                                this.getLeft(bigBorder, border)
-                                this.getBottom(bigBorder, border)
+                                // this.getLeft(bigBorder, border)
+                                // this.getBottom(bigBorder, border)
+                                bigBorder.push(border[380])
                             } else if (i == 3) {
-                                this.getTop(bigBorder, border)
+                                // this.getTop(bigBorder, border)
                             } else if (i == 4) {
                                 continue
                             } else if (i == 5) {
-                                this.getBottom(bigBorder, border)
+                                // this.getBottom(bigBorder, border)
                             } else if (i == 6) {
-                                this.getTop(bigBorder, border)
-                                this.getRight(bigBorder, border)
+                                // this.getTop(bigBorder, border)
+                                // this.getRight(bigBorder, border)
+                                bigBorder.push(border[127])
                             } else if (i == 7) {
-                                this.getRight(bigBorder, border)
+                                // this.getRight(bigBorder, border)
                             } else {
-                                this.getRight(bigBorder, border)
-                                this.getBottom(bigBorder, border)
+                                // this.getRight(bigBorder, border)
+                                // this.getBottom(bigBorder, border)
+                                bigBorder.push(border[507])
                             }
                         }
                         break;

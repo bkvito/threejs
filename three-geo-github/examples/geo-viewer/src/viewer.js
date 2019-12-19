@@ -576,10 +576,10 @@ class Viewer {
 
         let textGeo = new THREE.TextGeometry(text, {
             font: font,
-            size: size - size * 0.4,
+            size: 0.6*size,
             height: 0.02,
             curveSegments: 4,
-            bevelThickness: 2,
+            bevelThickness: 3,
             bevelSize: 1.5,
             bevelEnabled: false
         });
@@ -598,7 +598,7 @@ class Viewer {
         let textMesh = new THREE.Mesh(textGeo, materials);
         textMesh.position.x = rangeBox[0][3][0]//+centerOffset;
         textMesh.position.y = rangeBox[0][3][1];
-        textMesh.position.z = this.layerPosition + size * 0.3;
+        textMesh.position.z = this.layerPosition + size * 0.7;
         textMesh.rotation.x = Math.PI / 2;
         textMesh.castShadow = true;
         textMesh.name="Layer"+ i +"discrible"

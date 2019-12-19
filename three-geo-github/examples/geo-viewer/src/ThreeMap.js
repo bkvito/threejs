@@ -133,24 +133,8 @@ export default class ThreeMap {
     //this.mapData.features[0].vector3=[[[-0.5422318350292201, 0.8743065808350237],[0.5996181675534342, 0.8743065808350237],[0.5996181675534342, -0.8407290386369067],[-0.5422318350292201,-0.8407290386369067]]]//[1,1,-1],[-1,1,-1],[-1,-1,-1],[1,-1,-1]
     this.mapData.features[0].vector3 = [this.mapData.rangeBox]
 
-    // //生成四个角的线
-    // var rangeBoxArray = this.mapData.rangeBox
-    // var rangeLineGroup = new THREE.Group()
-    // rangeLineGroup.name = "demTileBorderLineCollection"
-    // for (let i = 0; i < rangeBoxArray.length; i++) {
-    //   var material = new THREE.LineBasicMaterial({
-    //     color: 0x0000ff
-    //   });
-
-    //   var geometry = new THREE.Geometry();
-    //   geometry.vertices.push(
-    //     new THREE.Vector3(rangeBoxArray[i][0], rangeBoxArray[i][1], rangeBoxArray[i][2]),
-    //     new THREE.Vector3(rangeBoxArray[i][0], rangeBoxArray[i][1], 0)
-    //   );
-    //   var line = new THREE.Line(geometry, material);
-    //   rangeLineGroup.add(line)
-    // }
-    // window.viewer.scene.add(rangeLineGroup);
+    
+    
 
 
 
@@ -193,6 +177,8 @@ export default class ThreeMap {
     // const lineGroupBottom = lineGroup.clone();
     // lineGroupBottom.position.z = -1;
     // this.scene.add(lineGroup);
+
+
     // this.scene.add(lineGroupBottom);
     // this.scene.add(group);
 
@@ -202,8 +188,9 @@ export default class ThreeMap {
 
     group.name = "Layer" + window.viewer.layerAmount
     //根据已加载图层个数确定当前图层加载位置，按照从上到下的顺序加载图层
-    group.position.z = this.mapData.layerId == 1 ? 0 : window.viewer.layerPosition//window.viewer.layerAmount ==0 ? -0.1: -window.viewer.layerAmount*0.1-0.1
+    group.position.z = this.mapData.layerId == 1 ? -this.mapData.dataExtrude*0.5 : window.viewer.layerPosition//window.viewer.layerAmount ==0 ? -0.1: -window.viewer.layerAmount*0.1-0.1
     window.viewer.label_Zposition.push(window.viewer.layerPosition)
+    window.viewer.layerPosition= window.viewer.layerPosition ? window.viewer.layerPosition:-this.mapData.dataExtrude*0.5
     window.viewer.layerPosition -= this.mapData.dataExtrude
     window.viewer.scene.add(group);
     window.viewer.layerAmount += 1
@@ -244,38 +231,45 @@ export default class ThreeMap {
         shape.lineTo(x, y, x, y);
       }
     });
-    // debugger
-    //shape = viewer.mapShape
+    
 
-    const geometry = new THREE.ExtrudeGeometry(shape, {
-      //amount: -1,
-      depth: -this.mapData.dataExtrude,
-      bevelEnabled: false
-    });
-    // const length = Math.abs(this.mapData.rangeBox[0][0][0])+Math.abs(this.mapData.rangeBox[0][1][0])
-    // const geometry = new THREE.BoxGeometry(length,length,this.mapData.dataExtrude)
+    // const geometry = new THREE.ExtrudeGeometry(shape, {
+    //   //amount: -1,
+    //   depth: -this.mapData.dataExtrude,
+    //   bevelEnabled: false
+    // }); 
+    // //加载纹理图片
+    // var texture = new THREE.TextureLoader().load(this.mapData.texture);
+    // const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+    // this.caculateGeometryUv(geometry)
+    // const mesh = new THREE.Mesh(geometry, material);
 
+    let materials = [];
+    let textureLoader1;
+    textureLoader1 = new THREE.TextureLoader();
+    load_textures(this.mapData.texture, 0);
+    //load_textures(['test.jpg', 'test.jpg', 'test.jpg', 'test.jpg', 'test.jpg', 'test.jpg'], 0);
+    //加载纹理
+    function load_textures(to_load, loadedIndex) {
 
-
-
-
-    // var mycolor = new THREE.Color()
-    // mycolor.fromArray(new Float32Array([Math.random(), Math.random(), Math.random()]));
-
-    //加载纹理图片
-    var texture = new THREE.TextureLoader().load(this.mapData.texture);
-    const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-
-    // var loader = new THREE.CubeTextureLoader().setPath('../data/textures/');
-    // var textureCube = loader.load([
-    //   'test.jpg', 'test.jpg',
-    //   'test.jpg', 'test.jpg',
-    //   'test.jpg', 'test.jpg',
-    // ]);
-    // var material = new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: textureCube });
-
-    this.caculateGeometryUv(geometry)
-    const mesh = new THREE.Mesh(geometry, material);
+      textureLoader1.load(to_load[loadedIndex], function (tex) {
+        //loadedtex[to_load[loadedIndex]] = tex;
+        materials[loadedIndex] = (new THREE.MeshBasicMaterial({ map: tex, overdraw: true }));
+        load_textures(to_load, loadedIndex + 1);
+      });
+    }
+    const offsetX = (this.mapData.rangeBox[0][0][0]+this.mapData.rangeBox[0][1][0])/2;
+    const offsetY = (this.mapData.rangeBox[0][1][1]+this.mapData.rangeBox[0][2][1])/2
+    let mesh = new THREE.Mesh(
+      new THREE.CubeGeometry(
+        Math.abs(this.mapData.rangeBox[0][0][0])+Math.abs(this.mapData.rangeBox[0][1][0]), 
+        Math.abs(this.mapData.rangeBox[0][1][1])+Math.abs(this.mapData.rangeBox[0][2][1]),
+        this.mapData.dataExtrude),
+      //bufferGeometry,
+      new THREE.MultiMaterial(materials)
+    );
+    mesh.position.x= offsetX
+    mesh.position.y= offsetY
 
     return mesh;
   }
